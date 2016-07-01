@@ -1,0 +1,24 @@
+﻿{
+	"version": "0.0.1",
+  	"authors": [ "Daniel Little" ],
+	"description": "Eventual core package",
+	"packOptions": {
+		"owners": [ "lavinski" ],
+		"copyright": "Copyright © Daniel Little 2015",
+		"tags": [ "Eventual", "Event", "Sourcing", "Aggregate", "EventStore" ],
+		"releaseNotes": "",
+		"licenseUrl": "https://github.com/Lavinski/Eventual/blob/master/License.md",
+		"projectUrl": "https://github.com/Lavinski/Eventual/",
+		"iconUrl": "https://raw.github.com/Lavinski/Eventual/master/Logo.png"
+	},
+
+	"dependencies": {
+		"NETStandard.Library": "1.6.0"
+	},
+
+	"frameworks": {
+		"netstandard1.6": {
+			"imports": "dnxcore50"
+		}
+	}
+}
