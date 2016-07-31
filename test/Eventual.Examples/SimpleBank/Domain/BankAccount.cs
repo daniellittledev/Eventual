@@ -1,4 +1,5 @@
 ﻿using System;
+using Eventual.Domain;
 
 namespace Eventual.Examples.SimpleBank.Domain
 {
@@ -11,17 +12,17 @@ namespace Eventual.Examples.SimpleBank.Domain
 
         protected BankAccount(Guid aggregateId, int loadedSequence)
         {
-            AggregateId = aggregateId;
+            Id = aggregateId;
             LoadedSequence = loadedSequence;
         }
 
         public BankAccount(BankAccount previous, decimal balance)
-            : this(previous.AggregateId, previous.LoadedSequence)
+            : this(previous.Id, previous.LoadedSequence)
         {
             Balance = balance;
         }
 
-        public Guid AggregateId { get; }
+        public Guid Id { get; }
         public int LoadedSequence { get; }
     }
 }

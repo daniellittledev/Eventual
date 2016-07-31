@@ -1,0 +1,33 @@
+﻿{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+
+  "dependencies": {
+    "Eventual": { "target": "project" },
+    "Eventual.MessageContracts": { "target": "project" },
+    "xunit": "2.2.0-beta2-build3300",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "FluentAssertions": "4.12.0",
+    "Moq": "4.6.36-alpha"
+  },
+
+  "frameworks": {
+
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0",
+          "type": "platform"
+        }
+      },
+      "imports": [
+        "netstandard1.6"
+      ]
+    }
+
+  }
+}

@@ -1,6 +1,6 @@
-﻿{
+{
 	"version": "0.0.1",
-  	"authors": [ "Daniel Little" ],
+	"authors": [ "Daniel Little" ],
 	"description": "Eventual core package",
 	"packOptions": {
 		"owners": [ "lavinski" ],
@@ -13,7 +13,9 @@
 	},
 
 	"dependencies": {
-		"NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.0",
+    "Eventual.MessageContracts": { "target": "project" },
+    "System.Reflection.TypeExtensions": "4.1.0"
 	},
 
 	"frameworks": {

@@ -1,10 +1,11 @@
-using System.Collections.Generic;
+using Eventual.Domain;
+using Eventual.EventStore;
 
 namespace Eventual
 {
-    public interface IAggregateHydrator
+    public interface IAggregateHydrator<T>
+        where T : class, IAggregateRoot
     {
-        T Hydrate<T>(IEnumerable<object> events)
-            where T : IAggregateRoot;
+        T Hydrate(AggregateStream stream);
     }
 }

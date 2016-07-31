@@ -18,9 +18,9 @@ namespace Eventual.Examples.SimpleBank.Domain
             return new BankAccountDepositEvent(amount);
         }
 
-        public static BankAccount Apply(this BankAccount bankAccount, BankAccountDepositEvent fact)
+        public static BankAccount Apply(this BankAccount bankAccount, BankAccountDepositEvent @event)
         {
-            return new BankAccount(bankAccount, bankAccount.Balance + fact.Amount);
+            return new BankAccount(bankAccount, bankAccount.Balance + @event.Amount);
         }
     }
 }
