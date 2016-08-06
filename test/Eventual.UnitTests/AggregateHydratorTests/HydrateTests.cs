@@ -12,6 +12,8 @@ namespace Eventual.UnitTests
 {
     public class HydrateTests
     {
+        #region TestDomain
+
         internal class DomainObject : IAggregateRoot
         {
             public DomainObject(Guid id, int loadedSequence)
@@ -28,6 +30,8 @@ namespace Eventual.UnitTests
         {
             public int EventId { get; set; }
         }
+
+        #endregion
 
         [Fact]
         public void HydrateMustSetTheIdAndLoadedSequenceOfTheDomainObject()
