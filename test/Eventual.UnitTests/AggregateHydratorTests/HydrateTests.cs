@@ -1,38 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Eventual.Domain;
 using Eventual.Implementation;
 using Eventual.EventStore;
 using Eventual.MessageContracts;
 using Xunit;
 using FluentAssertions;
 using Moq;
+using Eventual.UnitTests.TestDomain;
 
 namespace Eventual.UnitTests
 {
     public class HydrateTests
     {
-        #region TestDomain
-
-        internal class DomainObject : IAggregateRoot
-        {
-            public DomainObject(Guid id, int loadedSequence)
-            {
-                Id = id;
-                LoadedSequence = loadedSequence;
-            }
-
-            public Guid Id { get; }
-            public int LoadedSequence { get; }
-        }
-
-        internal class SampleEvent : IPersistedDomainEvent
-        {
-            public int EventId { get; set; }
-        }
-
-        #endregion
-
         [Fact]
         public void HydrateMustSetTheIdAndLoadedSequenceOfTheDomainObject()
         {
