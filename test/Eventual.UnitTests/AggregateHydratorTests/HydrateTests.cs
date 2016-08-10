@@ -15,7 +15,7 @@ namespace Eventual.UnitTests
         [Fact]
         public void HydrateMustSetTheIdAndLoadedSequenceOfTheDomainObject()
         {
-            var eventApplicator = new Mock<IEventApplicator<DomainObject>>();
+            var eventApplicator = new Mock<IEventApplicator>();
             var hydrator = new AggregateHydrator<DomainObject>(eventApplicator.Object);
 
             var id = new Guid("{5D776F58-AB9D-4AAF-805D-602F876DFA1A}");
@@ -34,7 +34,7 @@ namespace Eventual.UnitTests
                 new SampleEvent { EventId = 2 }
             };
 
-            var eventApplicator = new Mock<IEventApplicator<DomainObject>>();
+            var eventApplicator = new Mock<IEventApplicator>();
 
             eventApplicator
                 .Setup(x => x.ApplyEvent(It.IsAny<DomainObject>(), It.IsAny<IPersistedDomainEvent>()))

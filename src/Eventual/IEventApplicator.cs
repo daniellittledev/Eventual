@@ -8,10 +8,4 @@ namespace Eventual
         T ApplyEvent<T>(T aggregate, IPersistedDomainEvent @event)
             where T : class, IAggregateRoot;
     }
-
-    public interface IEventApplicator<T>
-        where T : class, IAggregateRoot
-    {
-        T ApplyEvent(T aggregate, IPersistedDomainEvent @event);
-    }
 }

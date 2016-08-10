@@ -1,6 +1,9 @@
 ﻿using Eventual.Implementation;
 using Xunit;
 using FluentAssertions;
+using Eventual.EventStore;
+using System;
+using System.Linq;
 
 namespace Eventual.UnitTests.TypeDiscoveryServiceTests
 {

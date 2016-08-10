@@ -6,17 +6,22 @@ namespace Eventual.Examples.SimpleBank.Domain
     /// <summary>
     /// Immutable class!
     /// </summary>
-    public class BankAccount : IAggregateRoot
+    public class Account : IAggregateRoot
     {
         internal decimal Balance { get; }
 
-        protected BankAccount(Guid aggregateId, int loadedSequence)
+        protected Account(Guid id, int loadedSequence)
         {
-            Id = aggregateId;
+            Id = id;
             LoadedSequence = loadedSequence;
         }
 
-        public BankAccount(BankAccount previous, decimal balance)
+        public Account(Guid id)
+            : this(id, 0)
+        {
+        }
+
+        public Account(Account previous, decimal balance)
             : this(previous.Id, previous.LoadedSequence)
         {
             Balance = balance;

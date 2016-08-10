@@ -4,13 +4,17 @@ namespace Eventual
 {
     public class ApplyMethodNotFoundException : Exception
     {
-        public Type EventType { get; set; }
+        public Type EventType { get; }
 
         public ApplyMethodNotFoundException(Type eventType)
-            : base($"Could not find Apply method for Event of type {eventType.FullName}")
         {
             EventType = eventType;
         }
 
+        public override string Message {
+            get {
+                return $"Could not find Apply method for Event of type {EventType.FullName}";
+            }
+        }
     }
 }

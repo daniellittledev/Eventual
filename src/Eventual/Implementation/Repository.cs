@@ -7,7 +7,7 @@ using Eventual.MessageContracts;
 
 namespace Eventual.Implementation
 {
-    public class Repository<T>
+    public class Repository<T> : IRepository<T>
         where T : class, IAggregateRoot
     {
         private readonly IEventStore eventStore;
@@ -25,18 +25,23 @@ namespace Eventual.Implementation
         {
             aggregateId.RequireNotDefault(nameof(aggregateId));
 
-            var aggregateStream = await eventStore.GetStreamAsync(aggregateId);
-            return hydrator.Hydrate(aggregateStream);
+            try {
+                var aggregateStream = await eventStore.GetStreamAsync(aggregateId);
+                return hydrator.Hydrate(aggregateStream);
+
+            } catch (StreamNotFoundException ex) {
+                throw new AggregateNotFoundException(ex, aggregateId);
+            }
         }
 
-        public async void SaveAsync(T aggregate, params IDomainEvent[] domainEvents)
+        public async Task SaveAsync(T aggregate, params IDomainEvent[] domainEvents)
         {
             aggregate.RequireNotNull(nameof(aggregate));
             domainEvents.RequireNotNullOrEmpty(nameof(domainEvents));
 
             await Task.WhenAll(domainEvents.Select(e => eventBus.PublishAsync(e)).ToArray());
 
-            await eventStore.SaveAsync(aggregate.Id, aggregate.LoadedSequence, domainEvents);
+            await eventStore.SaveAsync(aggregate.Id, aggregate.LoadedSequence, domainEvents.OfType<IPersistedDomainEvent>().ToArray());
         }
     }
 }

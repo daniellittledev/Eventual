@@ -24,6 +24,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Eventual.Examples", "test\E
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Eventual.MessageContracts", "src\Eventual.MessageContracts\Eventual.MessageContracts.xproj", "{66A8E93A-4119-406F-9D8C-27D364FF2742}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Eventual.Autofac", "src\Eventual.Autofac\Eventual.Autofac.xproj", "{440A58ED-3AF1-4703-84D1-9E4D1B9144FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{66A8E93A-4119-406F-9D8C-27D364FF2742}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66A8E93A-4119-406F-9D8C-27D364FF2742}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66A8E93A-4119-406F-9D8C-27D364FF2742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{440A58ED-3AF1-4703-84D1-9E4D1B9144FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{440A58ED-3AF1-4703-84D1-9E4D1B9144FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{440A58ED-3AF1-4703-84D1-9E4D1B9144FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{440A58ED-3AF1-4703-84D1-9E4D1B9144FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +71,6 @@ Global
 		{1D245548-F675-4859-8BE0-F93DA625B345} = {67BAA991-48DC-413A-A7EA-3A00A76E4F43}
 		{D23AFD1A-A225-4681-BA17-AC46E4C9C262} = {67BAA991-48DC-413A-A7EA-3A00A76E4F43}
 		{66A8E93A-4119-406F-9D8C-27D364FF2742} = {07767144-C4DE-4515-B7F9-68402AB6E351}
+		{440A58ED-3AF1-4703-84D1-9E4D1B9144FA} = {07767144-C4DE-4515-B7F9-68402AB6E351}
 	EndGlobalSection
 EndGlobal

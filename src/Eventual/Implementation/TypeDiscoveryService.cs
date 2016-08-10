@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Eventual.Domain;
 using System;
 using Eventual.MessageContracts;
+using System.Linq;
 
 namespace Eventual.Implementation
 {
@@ -26,7 +27,7 @@ namespace Eventual.Implementation
 
             return new DiscoveredTypes()
             {
-                ApplyExtensionMethods = extentionMethods,
+                ApplyExtensionMethods = extentionMethods.Select(x => new MethodInfoApplyMethod(x)).ToArray(),
                 PersistedDomainEventTypes = domainEvents
             };
         }

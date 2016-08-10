@@ -6,27 +6,11 @@ using System.Reflection;
 
 namespace Eventual.Implementation
 {
-    public class EventApplicator<T> : IEventApplicator<T>
-        where T : class, IAggregateRoot
-    {
-        private readonly IEventApplicator eventApplicator;
-
-        public EventApplicator(IEventApplicator eventApplicator)
-        {
-            this.eventApplicator = eventApplicator;
-        }
-
-        public T ApplyEvent(T aggregate, IPersistedDomainEvent @event)
-        {
-            return eventApplicator.ApplyEvent(aggregate, @event);
-        }
-    }
-
     public class EventApplicator : IEventApplicator
     {
         private readonly Dictionary<Type, IApplyMethod> eventApplyMethods = new Dictionary<Type, IApplyMethod>();
 
-        public EventApplicator(EventApplyMethods eventApplyMethods)
+        public EventApplicator(IReadOnlyCollection<IApplyMethod> eventApplyMethods)
         {
             foreach (var eventApplyMethod in eventApplyMethods) {
                 this.eventApplyMethods.Add(eventApplyMethod.EventType, eventApplyMethod);

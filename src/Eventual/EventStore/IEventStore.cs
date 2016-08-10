@@ -8,19 +8,19 @@ namespace Eventual.EventStore
     public interface IEventStore
     {
         Task<AggregateStream> GetStreamAsync(Guid streamId);
-        Task SaveAsync(Guid streamId, int loadedSequence, IDomainEvent[] domainEvents);
+        Task SaveAsync(Guid streamId, int loadedSequence, IPersistedDomainEvent[] domainEvents);
     }
 
     public class AggregateStream
     {
-        public Guid AggregateId { get; }
+        public Guid StreamId { get; }
         public int LatestSequence { get; }
         public IEnumerable<IPersistedDomainEvent> Events { get; }
         public object Snapshot { get; }
 
-        public AggregateStream(Guid aggregateId, int latestSequence, IEnumerable<IPersistedDomainEvent> events, object snapshot)
+        public AggregateStream(Guid streamId, int latestSequence, IEnumerable<IPersistedDomainEvent> events, object snapshot)
         {
-            this.AggregateId = aggregateId;
+            this.StreamId = streamId;
             this.LatestSequence = latestSequence;
             this.Events = events;
             this.Snapshot = snapshot;

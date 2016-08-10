@@ -3,11 +3,11 @@ using Eventual.MessageContracts;
 
 namespace Eventual.Examples.SimpleBank.Events
 {
-    public class BankAccountDepositEvent : IPersistedDomainEvent
+    public class AccountDepositEvent : IPersistedDomainEvent
     {
         public decimal Amount { get; }
 
-        public BankAccountDepositEvent(decimal amount)
+        public AccountDepositEvent(decimal amount)
         {
             Amount = amount;
         }
