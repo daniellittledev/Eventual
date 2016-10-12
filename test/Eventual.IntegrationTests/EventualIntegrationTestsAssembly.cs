@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Eventual.UnitTests
+namespace Eventual.IntegrationTests
 {
     public static class EventualIntegrationTestsAssembly
     {

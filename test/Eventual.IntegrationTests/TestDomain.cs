@@ -6,7 +6,13 @@ namespace Eventual.IntegrationTests.TestDomain
 {
     internal class DomainObject : IAggregateRoot
     {
-        public DomainObject(Guid id, int loadedSequence)
+        public DomainObject(Guid id)
+        {
+            Id = id;
+            LoadedSequence = 0;
+        }
+
+        protected DomainObject(Guid id, int loadedSequence)
         {
             Id = id;
             LoadedSequence = loadedSequence;
@@ -16,14 +22,24 @@ namespace Eventual.IntegrationTests.TestDomain
         public int LoadedSequence { get; }
     }
 
-    internal class SampleEvent : IPersistedDomainEvent
+    internal class DomainObjectCreatedEvent : IPersistedDomainEvent
     {
-        public int EventId { get; set; }
+        public string Text { get; }
+
+        public DomainObjectCreatedEvent(string text)
+        {
+            Text = text;
+        }
     }
 
     internal static class DomainObjectBehaviour
     {
-        public static DomainObject Apply(this DomainObject domainObject, SampleEvent @event)
+        public static IDomainEvent Create(this DomainObject Account, string text)
+        {
+            return new DomainObjectCreatedEvent(text);
+        }
+
+        public static DomainObject Apply(this DomainObject domainObject, DomainObjectCreatedEvent @event)
         {
             return domainObject;
         }

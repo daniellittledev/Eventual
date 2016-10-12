@@ -1,6 +1,7 @@
 using System;
 using Eventual.Domain;
 using Eventual.EventStore;
+using System.Reflection;
 
 namespace Eventual.Implementation
 {
@@ -16,13 +17,47 @@ namespace Eventual.Implementation
 
         public T Hydrate(AggregateStream stream)
         {
-            var aggregate = (T)Activator.CreateInstance(typeof(T), stream.StreamId, stream.LatestSequence);
+            var argTypes = new Type[] { typeof(Guid), typeof(int) };
+            var args = new object[] { stream.StreamId, stream.LatestSequence };
+            var aggregate = Construct<T>(argTypes, args);
 
             foreach (var @event in stream.Events) {
                 aggregate = eventApplicator.ApplyEvent(aggregate, @event);
             }
 
             return aggregate;
+        }
+
+        public static TType Construct<TType>(Type[] paramTypes, object[] paramValues)
+        {
+            Type t = typeof(TType);
+
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+            var constructorInfos = t.GetConstructors(flags);
+
+            foreach (var constructorInfo in constructorInfos) {
+                var parameters = constructorInfo.GetParameters();
+
+                if (paramTypes.Length != parameters.Length) {
+                    break;
+                }
+
+                var thisIsIt = true;
+                var length = parameters.Length;
+                for (int i = 0; i < length; i++) {
+                    if (paramTypes[i] != parameters[i].ParameterType) {
+                        thisIsIt = false;
+                        break;
+                    }
+                }
+
+                if (thisIsIt) {
+                    return (TType)constructorInfo.Invoke(paramValues);
+                }
+            }
+
+            throw new ConstructorMissingException(paramTypes);
         }
     }
 }
