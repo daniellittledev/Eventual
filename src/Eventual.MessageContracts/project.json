@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+  },
+
+  "frameworks": {
+    "netstandard1.1": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1",
+        "System.Runtime.InteropServices": "4.1.0",
+        "System.Runtime": "4.1.0"
+      }
+    }
+  }
+}

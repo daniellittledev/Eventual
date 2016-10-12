@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "Eventual": { "target": "project" },
+    "Enexure.MicroBus.Autofac": "3.2.3",
+    "Enexure.MicroBus": "3.3.3"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
