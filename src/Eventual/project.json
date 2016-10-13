@@ -1,7 +1,7 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.1-alpha-1",
   "authors": [ "Daniel Little" ],
-  "description": "Eventual core package",
+  "description": "Eventual core",
   "packOptions": {
     "owners": [ "lavinski" ],
     "copyright": "Copyright © Daniel Little 2015",
