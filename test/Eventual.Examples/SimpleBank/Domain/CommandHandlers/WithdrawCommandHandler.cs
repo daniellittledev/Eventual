@@ -20,7 +20,7 @@ namespace Eventual.Examples.SimpleBank.Domain.CommandHandlers
 
             var events = account.Withdraw(command.Amount);
 
-            repository.SaveAsync(account, events);
+            await repository.SaveAsync(account, events);
         }
     }
 }

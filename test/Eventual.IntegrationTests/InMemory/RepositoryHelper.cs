@@ -12,7 +12,6 @@ namespace Eventual.IntegrationTests
     {
         public static DiscoveredTypes DiscoveredTypes { get; }
 
-
         static TypesHelper()
         {
             DiscoveredTypes = TypeDiscoveryService.DiscoverTypes(EventualIntegrationTestsAssembly.Assembly);

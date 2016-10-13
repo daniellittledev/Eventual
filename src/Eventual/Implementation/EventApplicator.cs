@@ -24,6 +24,12 @@ namespace Eventual.Implementation
 
             IApplyMethod methodInfo;
             if (eventApplyMethods.TryGetValue(eventType, out methodInfo)) {
+
+                if (!methodInfo.AggregateRootType.IsAssignableFrom(typeof(T))) {
+
+                    throw new EventApplyAggregateMismatchException(typeof(T), methodInfo.AggregateRootType, methodInfo.EventType);
+                }
+
                 return (T)methodInfo.Invoke(aggregate, @event);
             } else {
                 throw new ApplyMethodNotFoundException(eventType);

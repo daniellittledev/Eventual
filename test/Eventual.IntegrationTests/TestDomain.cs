@@ -44,4 +44,22 @@ namespace Eventual.IntegrationTests.TestDomain
             return domainObject;
         }
     }
+
+    internal class DifferentDomainObject : IAggregateRoot
+    {
+        public DifferentDomainObject(Guid id)
+        {
+            Id = id;
+            LoadedSequence = 0;
+        }
+
+        protected DifferentDomainObject(Guid id, int loadedSequence)
+        {
+            Id = id;
+            LoadedSequence = loadedSequence;
+        }
+
+        public Guid Id { get; }
+        public int LoadedSequence { get; }
+    }
 }

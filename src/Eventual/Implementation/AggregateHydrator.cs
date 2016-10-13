@@ -32,7 +32,7 @@ namespace Eventual.Implementation
         {
             Type t = typeof(TType);
 
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
             var constructorInfos = t.GetConstructors(flags);
 
@@ -40,7 +40,7 @@ namespace Eventual.Implementation
                 var parameters = constructorInfo.GetParameters();
 
                 if (paramTypes.Length != parameters.Length) {
-                    break;
+                    continue;
                 }
 
                 var thisIsIt = true;

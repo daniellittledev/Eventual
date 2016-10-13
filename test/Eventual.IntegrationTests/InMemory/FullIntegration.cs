@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Eventual.MessageContracts;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using Eventual.EventStore.Implementation.InMemory;
+using Eventual.Implementation;
 
 namespace Eventual.IntegrationTests.InMemory
 {
@@ -51,6 +53,24 @@ namespace Eventual.IntegrationTests.InMemory
 
             loadedDomainObject.Id.Should().Be(Guids.Guid1);
             loadedDomainObject.LoadedSequence.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task LoadingAggregateBackAsADifferentType()
+        {
+            var types = TypesHelper.DiscoveredTypes;
+            var store = new InMemoryEventStore();
+            var repository1 = RepositoryHelper.BuildRepository<DomainObject>(types, store, x => Task.CompletedTask);
+            var repository2 = RepositoryHelper.BuildRepository<DifferentDomainObject>(types, store, x => Task.CompletedTask);
+
+            var domainObject = new DomainObject(Guids.Guid1);
+            var events = domainObject.Create(string.Empty);
+
+            await repository1.SaveAsync(domainObject, events);
+
+            repository2
+                .Invoking(x => x.LoadAsync(Guids.Guid1).Wait())
+                .ShouldThrow<EventApplyAggregateMismatchException>();
         }
 
         [Fact]
