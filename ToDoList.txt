@@ -1,5 +1,6 @@
 1. Integration Tests
 2. Working Examples
-3. Conventions
-4. Unit Tests Examples
-5. Snapshotting
+3. Concurrency
+4. Conventions
+5. Unit Tests Examples
+6. Snapshotting
