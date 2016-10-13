@@ -18,8 +18,8 @@ test_script:
 artifacts:
 - path: src\**\bin\**\*.nupkg
 
-deploy:
-- provider: Environment
-  name: Public Nuget
-  on:
-    branch: master
+#deploy:
+#- provider: Environment
+#  name: Public Nuget
+#  on:
+#    branch: master
