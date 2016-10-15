@@ -69,7 +69,7 @@ namespace Eventual.EventStore.Implementation.InMemory
                 return UpdateStream(streamId, (events.Count - 1), domainEvents, (retries - 1));
             }
 
-            events.AddRange(domainEvents);
+            eventStreams[streamId].AddRange(domainEvents);
             return Task.CompletedTask;
         }
     }

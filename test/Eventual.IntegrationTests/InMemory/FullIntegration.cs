@@ -8,6 +8,7 @@ using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using Eventual.EventStore.Implementation.InMemory;
 using Eventual.Implementation;
+using Eventual.Concurrency;
 
 namespace Eventual.IntegrationTests.InMemory
 {
@@ -59,7 +60,7 @@ namespace Eventual.IntegrationTests.InMemory
         public async Task LoadingAggregateBackAsADifferentType()
         {
             var types = TypesHelper.DiscoveredTypes;
-            var store = new InMemoryEventStore();
+            var store = new InMemoryEventStore(new ConflictResolver());
             var repository1 = RepositoryHelper.BuildRepository<DomainObject>(types, store, x => Task.CompletedTask);
             var repository2 = RepositoryHelper.BuildRepository<DifferentDomainObject>(types, store, x => Task.CompletedTask);
 

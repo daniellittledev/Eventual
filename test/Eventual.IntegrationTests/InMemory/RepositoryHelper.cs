@@ -1,4 +1,5 @@
-﻿using Eventual.Domain;
+﻿using Eventual.Concurrency;
+using Eventual.Domain;
 using Eventual.EventStore;
 using Eventual.EventStore.Implementation.InMemory;
 using Eventual.Implementation;
@@ -23,7 +24,7 @@ namespace Eventual.IntegrationTests
         public static IRepository<T> BuildRepositoryWithInMemoryEventStore<T>(DiscoveredTypes types)
             where T : class, IAggregateRoot
         {
-            var eventStore = new InMemoryEventStore();
+            var eventStore = new InMemoryEventStore(new ConflictResolver());
             var repository = BuildRepository<T>(types, eventStore, _ => Task.CompletedTask);
             return repository;
         }
@@ -37,7 +38,7 @@ namespace Eventual.IntegrationTests
         public static IRepository<T> BuildRepositoryWithInMemoryEventStore<T>(DiscoveredTypes types, Func<IDomainEvent, Task> onEvent)
             where T : class, IAggregateRoot
         {
-            var eventStore = new InMemoryEventStore();
+            var eventStore = new InMemoryEventStore(new ConflictResolver());
             var repository = BuildRepository<T>(types, eventStore, onEvent);
             return repository;
         }
