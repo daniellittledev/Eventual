@@ -1,6 +1,20 @@
-1. Integration Tests
-2. Working Examples
-3. Concurrency
-4. Conventions
-5. Unit Tests Examples
-6. Snapshotting
+## Main current items
+
+ - Integration test for concurrency
+ - Abstraction for the Event store so that I can reuse code for both the in memory store and a sql store.
+
+## TODO Items
+
+ - Working Examples
+ - Concurrency
+  - Integration Test
+ - Conventions
+ - Snapshotting
+ - Repository Builder
+ - Sql Event Store
+ - In Memory Read Model Generation
+
+## Continue to do
+
+ - Unit Tests Examples
+ - Integration Tests

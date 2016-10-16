@@ -12,10 +12,6 @@ namespace Eventual
             AggregateId = aggregateId;
         }
 
-        public override string Message {
-            get {
-                return $"No aggregate with Id {AggregateId} could be found";
-            }
-        }
+        public override string Message => $"No aggregate with Id {AggregateId} could be found";
     }
 }

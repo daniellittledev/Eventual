@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Eventual.Concurrency;
 using Eventual.Domain;
 using Eventual.EventStore;
-using Eventual.MessageContracts;
 using Eventual.EventTypes;
 
 namespace Eventual.Implementation

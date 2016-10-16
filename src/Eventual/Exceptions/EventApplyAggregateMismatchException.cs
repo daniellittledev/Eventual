@@ -15,10 +15,6 @@ namespace Eventual.Implementation
             this.EventType = eventType;
         }
 
-        public override string Message {
-            get {
-                return $"The Apply function for the event {EventType} expects the aggregate {ApplyAggregateRootType}, however the aggregate being hydrated was of type {ExpectedAggregateType}";
-            }
-        }
+        public override string Message => $"The Apply function for the event {EventType} expects the aggregate {ApplyAggregateRootType}, however the aggregate being hydrated was of type {ExpectedAggregateType}";
     }
 }
