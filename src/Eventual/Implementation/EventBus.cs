@@ -6,14 +6,14 @@ namespace Eventual.Implementation
 {
     public class EventBus : IEventBus
     {
-        private readonly Func<IDomainEvent, Task> eventHandler;
+        private readonly Func<object, Task> eventHandler;
 
-        public EventBus(Func<IDomainEvent, Task> eventHandler)
+        public EventBus(Func<object, Task> eventHandler)
         {
             this.eventHandler = eventHandler;
         }
 
-        public Task PublishAsync(IDomainEvent domainEvent)
+        public Task PublishAsync(object domainEvent)
         {
             return eventHandler(domainEvent);
         }

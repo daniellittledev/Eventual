@@ -9,6 +9,6 @@ namespace Eventual
         where T : IAggregateRoot
     {
         Task<T> LoadAsync(Guid aggregateId);
-        Task SaveAsync(T aggregate, params IDomainEvent[] domainEvents);
+        Task SaveAsync(T aggregate, params object[] domainEvents);
     }
 }

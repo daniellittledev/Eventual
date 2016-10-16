@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Eventual.MessageContracts;
 using Eventual.Domain;
 using System.Reflection;
 
@@ -17,7 +16,7 @@ namespace Eventual.Implementation
             }
         }
 
-        public T ApplyEvent<T>(T aggregate, IPersistedDomainEvent @event)
+        public T ApplyEvent<T>(T aggregate, object @event)
             where T : class, IAggregateRoot
         {
             var eventType = @event.GetType();

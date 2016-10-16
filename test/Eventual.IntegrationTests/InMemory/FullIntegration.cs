@@ -3,12 +3,10 @@ using System;
 using Xunit;
 using FluentAssertions;
 using System.Threading.Tasks;
-using Eventual.MessageContracts;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using Eventual.EventStore.Implementation.InMemory;
 using Eventual.Implementation;
-using Eventual.Concurrency;
 
 namespace Eventual.IntegrationTests.InMemory
 {
@@ -17,7 +15,7 @@ namespace Eventual.IntegrationTests.InMemory
         [Fact]
         public void LoadAggregateThatDoesNotExistShouldThrow()
         {
-            var repository = RepositoryHelper.BuildRepositoryWithInMemoryEventStore<DomainObject>(TypesHelper.DiscoveredTypes);
+            var repository = new RepositoryBuilder().Build<DomainObject>();
 
             repository
                 .Invoking(x => x.LoadAsync(Guid.NewGuid()).Wait())
@@ -27,11 +25,16 @@ namespace Eventual.IntegrationTests.InMemory
         [Fact]
         public async Task SavingNewAggregateShouldRaiseEvents()
         {
-            var data = "Hello";
-            var subject = new ReplaySubject<IDomainEvent>();
-            var repository = RepositoryHelper.BuildRepositoryWithInMemoryEventStore<DomainObject>(TypesHelper.DiscoveredTypes, e => subject.OnNext(e));
+            var subject = new ReplaySubject<object>();
+
+            var repository = new RepositoryBuilder()
+                .SetEventBus(new EventBus(e => { subject.OnNext(e); return Task.CompletedTask; }))
+                .Build<DomainObject>();
+
             var stream = subject.AsObservable();
             var domainObject = new DomainObject(Guids.Guid1);
+
+            var data = "Hello";
             var events = domainObject.Create(data);
 
             await repository.SaveAsync(domainObject, events);
@@ -43,9 +46,10 @@ namespace Eventual.IntegrationTests.InMemory
         [Fact]
         public async Task SavedAggregateShouldBeAbleToBeLoaded()
         {
-            var data = "Hello";
-            var repository = RepositoryHelper.BuildRepositoryWithInMemoryEventStore<DomainObject>(TypesHelper.DiscoveredTypes);
+            var repository = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).Build<DomainObject>();
             var domainObject = new DomainObject(Guids.Guid1);
+
+            var data = "Hello";
             var events = domainObject.Create(data);
 
             await repository.SaveAsync(domainObject, events);
@@ -59,10 +63,9 @@ namespace Eventual.IntegrationTests.InMemory
         [Fact]
         public async Task LoadingAggregateBackAsADifferentType()
         {
-            var types = TypesHelper.DiscoveredTypes;
-            var store = new InMemoryEventStore(new ConflictResolver());
-            var repository1 = RepositoryHelper.BuildRepository<DomainObject>(types, store, x => Task.CompletedTask);
-            var repository2 = RepositoryHelper.BuildRepository<DifferentDomainObject>(types, store, x => Task.CompletedTask);
+            var store = new InMemoryEventStore();
+            var repository1 = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).SetEventStore(store).Build<DomainObject>();
+            var repository2 = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).SetEventStore(store).Build<DifferentDomainObject>();
 
             var domainObject = new DomainObject(Guids.Guid1);
             var events = domainObject.Create(string.Empty);
@@ -77,7 +80,7 @@ namespace Eventual.IntegrationTests.InMemory
         [Fact]
         public void SavingNewAggregateThatHasntChangedShouldThrow()
         {
-            var repository = RepositoryHelper.BuildRepositoryWithInMemoryEventStore<DomainObject>(TypesHelper.DiscoveredTypes);
+            var repository = new RepositoryBuilder().Build<DomainObject>();
 
             var domainObject = new DomainObject(Guids.Guid1);
 

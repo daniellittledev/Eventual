@@ -3,7 +3,7 @@ using Eventual.MessageContracts;
 
 namespace Eventual.Examples.SimpleBank.Events
 {
-    public class AccountWithdrawnEvent : IPersistedDomainEvent
+    public class AccountWithdrawnEvent : IDomainEvent
     {
         public decimal Amount { get; }
 

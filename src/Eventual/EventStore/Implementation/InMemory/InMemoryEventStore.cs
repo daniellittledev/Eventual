@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Eventual.MessageContracts;
 using System.Collections.Generic;
 using System.Linq;
 using Eventual.Concurrency;
@@ -9,17 +8,13 @@ namespace Eventual.EventStore.Implementation.InMemory
 {
     public class InMemoryEventStore : IEventStore
     {
-        private readonly IConflictResolver conflictResolver;
-        private readonly Dictionary<Guid, List<IPersistedDomainEvent>> eventStreams = new Dictionary<Guid, List<IPersistedDomainEvent>>();
-
-        public InMemoryEventStore(IConflictResolver conflictResolver)
-        {
-            this.conflictResolver = conflictResolver;
-        }
+        private readonly Dictionary<Guid, List<object>> eventStreams = new Dictionary<Guid, List<object>>();
 
         public Task<AggregateStream> GetStreamAsync(Guid streamId)
         {
-            List<IPersistedDomainEvent> events = null;
+            //TODO: IEventTypeContainer
+
+            List<object> events = null;
             if (eventStreams.TryGetValue(streamId, out events)) {
                 return Task.FromResult(new AggregateStream(streamId, events.Count, events, null));
             }
@@ -27,17 +22,17 @@ namespace Eventual.EventStore.Implementation.InMemory
             throw new StreamNotFoundException(streamId);
         }
 
-        public Task SaveAsync(Guid streamId, int loadedSequence, IPersistedDomainEvent[] domainEvents)
+        public Task SaveAsync(IConflictResolver conflictResolver, Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents)
         {
-            return UpdateStream(streamId, loadedSequence, domainEvents, 5);
+            return UpdateStream(conflictResolver, streamId, loadedSequence, domainEvents, 5);
         }
 
-        private Task UpdateStream(Guid streamId, int loadedSequence, IPersistedDomainEvent[] domainEvents, int retries)
+        private Task UpdateStream(IConflictResolver conflictResolver, Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, int retries)
         {
             if (loadedSequence == 0) {
-                eventStreams.Add(streamId, new List<IPersistedDomainEvent>());
+                eventStreams.Add(streamId, new List<object>());
             }
-            List<IPersistedDomainEvent> events = eventStreams[streamId].ToList();
+            var events = eventStreams[streamId].ToList();
             var potentialConflicts = events.Count - loadedSequence;
 
             if (potentialConflicts < 0) {
@@ -66,7 +61,7 @@ namespace Eventual.EventStore.Implementation.InMemory
                     throw new EventStoreConcurrencyException(streamId, loadedSequence, events.Count, newEvents);
                 }
 
-                return UpdateStream(streamId, (events.Count - 1), domainEvents, (retries - 1));
+                return UpdateStream(conflictResolver, streamId, (events.Count - 1), domainEvents, (retries - 1));
             }
 
             eventStreams[streamId].AddRange(domainEvents);

@@ -9,6 +9,6 @@ namespace Eventual.Implementation
         Type AggregateRootType { get; }
         Type EventType { get; }
 
-        IAggregateRoot Invoke(IAggregateRoot aggregateRoot, IPersistedDomainEvent domainEvent);
+        IAggregateRoot Invoke(IAggregateRoot aggregateRoot, object domainEvent);
     }
 }

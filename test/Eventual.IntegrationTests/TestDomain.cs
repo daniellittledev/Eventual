@@ -22,7 +22,7 @@ namespace Eventual.IntegrationTests.TestDomain
         public int LoadedSequence { get; }
     }
 
-    internal class DomainObjectCreatedEvent : IPersistedDomainEvent
+    internal class DomainObjectCreatedEvent : IDomainEvent
     {
         public string Text { get; }
 

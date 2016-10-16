@@ -20,7 +20,7 @@ namespace Eventual.UnitTests
 
             var id = new Guid("{5D776F58-AB9D-4AAF-805D-602F876DFA1A}");
 
-            var domainObject = hydrator.Hydrate(new AggregateStream(id, 1, Enumerable.Empty<IPersistedDomainEvent>(), null));
+            var domainObject = hydrator.Hydrate(new AggregateStream(id, 1, Enumerable.Empty<object>(), null));
 
             domainObject.Id.Should().Be(id);
             domainObject.LoadedSequence.Should().Be(1);
@@ -37,8 +37,8 @@ namespace Eventual.UnitTests
             var eventApplicator = new Mock<IEventApplicator>();
 
             eventApplicator
-                .Setup(x => x.ApplyEvent(It.IsAny<DomainObject>(), It.IsAny<IPersistedDomainEvent>()))
-                .Returns<DomainObject, IPersistedDomainEvent>((o, e) => o );
+                .Setup(x => x.ApplyEvent(It.IsAny<DomainObject>(), It.IsAny<object>()))
+                .Returns<DomainObject, object>((o, e) => o );
 
             var hydrator = new AggregateHydrator<DomainObject>(eventApplicator.Object);
 

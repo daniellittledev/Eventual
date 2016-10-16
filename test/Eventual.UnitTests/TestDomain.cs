@@ -16,7 +16,7 @@ namespace Eventual.UnitTests.TestDomain
         public int LoadedSequence { get; }
     }
 
-    internal class SampleEvent : IPersistedDomainEvent
+    internal class SampleEvent
     {
         public int EventId { get; set; }
     }

@@ -19,7 +19,7 @@ namespace Eventual.EventStore
             CurrentSteamSequence = currentSteamSequence;
         }
 
-        public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence, IReadOnlyCollection<IPersistedDomainEvent> extraEvents)
+        public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence, IReadOnlyCollection<object> extraEvents)
             : this (streamId, loadedStreamSequence, currentSteamSequence)
         {
             ExtraEventTypes = extraEvents.Select(x => x.GetType().FullName).ToArray();

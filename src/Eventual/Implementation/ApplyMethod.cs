@@ -1,5 +1,4 @@
 ﻿using Eventual.Domain;
-using Eventual.MessageContracts;
 using System;
 using System.Reflection;
 
@@ -18,7 +17,7 @@ namespace Eventual.Implementation
 
         public Type EventType => methodInfo.GetParameters()[1].ParameterType;
 
-        public IAggregateRoot Invoke(IAggregateRoot aggregateRoot, IPersistedDomainEvent domainEvent)
+        public IAggregateRoot Invoke(IAggregateRoot aggregateRoot, object domainEvent)
         {
             return (IAggregateRoot)methodInfo.Invoke(null, new object[] { aggregateRoot, domainEvent });
         }
@@ -37,7 +36,7 @@ namespace Eventual.Implementation
 
         public Type EventType => @delegate.GetMethodInfo().GetParameters()[1].ParameterType;
 
-        public IAggregateRoot Invoke(IAggregateRoot aggregateRoot, IPersistedDomainEvent domainEvent)
+        public IAggregateRoot Invoke(IAggregateRoot aggregateRoot, object domainEvent)
         {
             return (IAggregateRoot)@delegate.DynamicInvoke(aggregateRoot, domainEvent);
         }

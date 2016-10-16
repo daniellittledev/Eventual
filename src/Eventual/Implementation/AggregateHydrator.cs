@@ -17,7 +17,7 @@ namespace Eventual.Implementation
 
         public T Hydrate(AggregateStream stream)
         {
-            var argTypes = new Type[] { typeof(Guid), typeof(int) };
+            var argTypes = new [] { typeof(Guid), typeof(int) };
             var args = new object[] { stream.StreamId, stream.LatestSequence };
             var aggregate = Construct<T>(argTypes, args);
 

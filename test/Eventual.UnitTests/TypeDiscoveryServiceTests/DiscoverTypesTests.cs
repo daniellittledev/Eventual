@@ -1,9 +1,6 @@
-﻿using Eventual.Implementation;
-using Xunit;
+﻿using Xunit;
+using Eventual.TypeDiscovery;
 using FluentAssertions;
-using Eventual.EventStore;
-using System;
-using System.Linq;
 
 namespace Eventual.UnitTests.TypeDiscoveryServiceTests
 {
@@ -12,15 +9,17 @@ namespace Eventual.UnitTests.TypeDiscoveryServiceTests
         [Fact]
         public void CanFindApplyExtensionMethods()
         {
-            var results = TypeDiscoveryService.DiscoverTypes(EventualUnitTestsAssembly.Assembly);
-            results.ApplyExtensionMethods.Count.Should().BeGreaterThan(0);
+            var applyExtensionMethods = new EventApplyLocator();
+            TypeDiscoveryService.DiscoverTypes(new IScanningLocator[] { applyExtensionMethods }, EventualUnitTestsAssembly.Assembly);
+            applyExtensionMethods.ApplyMethods.Count.Should().BeGreaterThan(0);
         }
 
         [Fact]
         public void CanFindPersistedDomainEvents()
         {
-            var results = TypeDiscoveryService.DiscoverTypes(EventualUnitTestsAssembly.Assembly);
-            results.PersistedDomainEventTypes.Count.Should().BeGreaterThan(0);
+            var domainEvents = new DomainEventLocator((x, i) => x.FullName.EndsWith("Event"));
+            TypeDiscoveryService.DiscoverTypes(new IScanningLocator[] { domainEvents }, EventualUnitTestsAssembly.Assembly);
+            domainEvents.EventTypes.Count.Should().BeGreaterThan(0);
         }
     }
 }
