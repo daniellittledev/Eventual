@@ -32,7 +32,9 @@ namespace Eventual.IntegrationTests.TestDomain
         }
     }
 
-    internal static class DomainObjectBehaviour
+    internal class DomainObjectUpdatedEvent : IDomainEvent {}
+
+    internal static class CreateDomainObjectBehaviour
     {
         public static IDomainEvent Create(this DomainObject Account, string text)
         {
@@ -40,6 +42,19 @@ namespace Eventual.IntegrationTests.TestDomain
         }
 
         public static DomainObject Apply(this DomainObject domainObject, DomainObjectCreatedEvent @event)
+        {
+            return domainObject;
+        }
+    }
+
+    internal static class UpdateDomainObjectBehaviour
+    {
+        public static IDomainEvent Update(this DomainObject Account)
+        {
+            return new DomainObjectUpdatedEvent();
+        }
+
+        public static DomainObject Apply(this DomainObject domainObject, DomainObjectUpdatedEvent @event)
         {
             return domainObject;
         }

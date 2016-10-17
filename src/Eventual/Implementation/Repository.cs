@@ -55,6 +55,7 @@ namespace Eventual.Implementation
                 .ToArray();
 
             await eventStore.SaveAsync(conflictResolver, aggregate.Id, aggregate.LoadedSequence, eventsToPersist);
+
         }
     }
 }

@@ -7,16 +7,18 @@ namespace Eventual.EventStore
 {
     public class EventStoreConcurrencyException : Exception
     {
-        public readonly Guid StreamId;
-        public readonly int CurrentSteamSequence;
-        public readonly int LoadedStreamSequence;
-        public readonly IReadOnlyCollection<string> ExtraEventTypes;
+        public Guid StreamId { get; }
+        public int CurrentSteamSequence { get; }
+        public int LoadedStreamSequence { get; }
+        public int Difference { get; }
+        public IReadOnlyCollection<string> ExtraEventTypes { get; }
 
         public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence)
         {
             StreamId = streamId;
             LoadedStreamSequence = loadedStreamSequence;
             CurrentSteamSequence = currentSteamSequence;
+            Difference = CurrentSteamSequence - LoadedStreamSequence;
         }
 
         public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence, IReadOnlyCollection<object> extraEvents)
@@ -27,26 +29,25 @@ namespace Eventual.EventStore
 
         public override string Message {
             get {
-                var numberOfExtraEvents = CurrentSteamSequence - LoadedStreamSequence;
                 var extraEvents = " extra event(s)";
                 var missingEvents = " missing event(s)";
-                var differencePhrase = numberOfExtraEvents > 0 ? extraEvents : missingEvents;
+                var differencePhrase = Difference > 0 ? extraEvents : missingEvents;
 
                 var message = $@"Concurrency exception, stream being saved to has been modified.
 StreamId: { StreamId}
 Loaded Stream Sequence: {LoadedStreamSequence}
 Current Stream Sequence: {CurrentSteamSequence}
-Difference: {numberOfExtraEvents} {differencePhrase}
+Difference: {Difference} {differencePhrase}
 
 When updating a stream all events in that stream are first read, in this case there were {LoadedStreamSequence} _
 events in the stream when the stream was loaded. Once the events are loaded work is done using them to _
 calculate subsequent events. These new events are then appended to the stream. However, in this case another agent _
-changed the stream by {numberOfExtraEvents} events. This means the new events created using the origial set _
+changed the stream by {Difference} events. This means the new events created using the origial set _
 of events is out of date. The action that casued these events to be created must retry using the new up-to-date _
 event stream.
 
 "
-+ ((numberOfExtraEvents > 0) ? (@"Extra Events:
++ ((Difference > 0) ? (@"Extra Events:
 "
 + string.Join(Environment.NewLine, ExtraEventTypes)) : "")
 + $@"

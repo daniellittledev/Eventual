@@ -5,6 +5,7 @@ using FluentAssertions;
 using System.Threading.Tasks;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using Eventual.EventStore;
 using Eventual.EventStore.Implementation.InMemory;
 using Eventual.Implementation;
 
@@ -87,6 +88,29 @@ namespace Eventual.IntegrationTests.InMemory
             repository
                 .Invoking(x => x.SaveAsync(domainObject).Wait())
                 .ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task ConcurrentSavesShouldThrow()
+        {
+            var repository = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).Build<DomainObject>();
+
+            var domainObject = new DomainObject(Guids.Guid1);
+            var events = domainObject.Create(string.Empty);
+            await repository.SaveAsync(domainObject, events);
+
+            var domainObject1 = await repository.LoadAsync(Guids.Guid1);
+            var domainObject2 = await repository.LoadAsync(Guids.Guid1);
+
+            var events1 = domainObject1.Update();
+            await repository.SaveAsync(domainObject1, events1);
+
+            var events2 = domainObject.Update();
+
+            repository
+                .Invoking(x => x.SaveAsync(domainObject2, events2).Wait())
+                .ShouldThrow<EventStoreConcurrencyException>()
+                .Which.Difference.Should().Be(1);
         }
     }
 }
