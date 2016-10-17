@@ -22,23 +22,17 @@ namespace Eventual.IntegrationTests.TestDomain
         public int LoadedSequence { get; }
     }
 
-    internal class DomainObjectCreatedEvent : IDomainEvent
-    {
-        public string Text { get; }
+    internal class DomainObjectCreatedEvent : IDomainEvent { }
 
-        public DomainObjectCreatedEvent(string text)
-        {
-            Text = text;
-        }
-    }
+    internal class DomainObjectUpdatedEvent : IDomainEvent { }
 
-    internal class DomainObjectUpdatedEvent : IDomainEvent {}
+    internal class DomainObjectSafelyUpdatedEvent : IDomainEvent { }
 
     internal static class CreateDomainObjectBehaviour
     {
-        public static IDomainEvent Create(this DomainObject Account, string text)
+        public static IDomainEvent Create(this DomainObject domainObject)
         {
-            return new DomainObjectCreatedEvent(text);
+            return new DomainObjectCreatedEvent();
         }
 
         public static DomainObject Apply(this DomainObject domainObject, DomainObjectCreatedEvent @event)
@@ -55,6 +49,19 @@ namespace Eventual.IntegrationTests.TestDomain
         }
 
         public static DomainObject Apply(this DomainObject domainObject, DomainObjectUpdatedEvent @event)
+        {
+            return domainObject;
+        }
+    }
+
+    internal static class ConcurrencySafeUpdateDomainObjectBehaviour
+    {
+        public static IDomainEvent ConcurrencySafeUpdate(this DomainObject Account)
+        {
+            return new DomainObjectSafelyUpdatedEvent();
+        }
+
+        public static DomainObject Apply(this DomainObject domainObject, DomainObjectSafelyUpdatedEvent @event)
         {
             return domainObject;
         }

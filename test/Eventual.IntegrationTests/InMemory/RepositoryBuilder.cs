@@ -36,10 +36,12 @@ namespace Eventual.IntegrationTests.InMemory
             eventStore = new InMemoryEventStore();
             transientEvents = new List<Type>();
             eventAliases = new Dictionary<Type, IReadOnlyCollection<string>>();
+            conflictResolver = new ConflictResolver();
         }
 
         private IEventBus eventBus;
         private IEventStore eventStore;
+        private IConflictResolver conflictResolver; 
         private IReadOnlyCollection<Type> transientEvents;
         private IDictionary<Type, IReadOnlyCollection<string>> eventAliases;
 
@@ -71,13 +73,19 @@ namespace Eventual.IntegrationTests.InMemory
             return this;
         }
 
+        public RepositoryBuilder SetConflictResolver(IConflictResolver conflictResolver)
+        {
+            if (conflictResolver == null) throw new ArgumentNullException(nameof(conflictResolver));
+            this.conflictResolver = conflictResolver;
+            return this;
+        }
+
         public IRepository<T> Build<T>()
             where T : class, IAggregateRoot
         {
             var eventClassifier = new EventClassifier(domainEvents, transientEvents, eventAliases);
             var eventApplicator = new EventApplicator(applyExtensionMethods.ApplyMethods);
             var aggregateHydrator = new AggregateHydrator<T>(eventApplicator);
-            var conflictResolver = new ConflictResolver();
             var repository = new Repository<T>(eventStore, conflictResolver, aggregateHydrator, eventBus, eventClassifier);
             return repository;
         }

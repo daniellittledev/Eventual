@@ -61,7 +61,7 @@ namespace Eventual.EventStore.Implementation.InMemory
                     throw new EventStoreConcurrencyException(streamId, loadedSequence, events.Count, newEvents);
                 }
 
-                return UpdateStream(conflictResolver, streamId, (events.Count - 1), domainEvents, (retries - 1));
+                return UpdateStream(conflictResolver, streamId, events.Count, domainEvents, (retries - 1));
             }
 
             eventStreams[streamId].AddRange(domainEvents);

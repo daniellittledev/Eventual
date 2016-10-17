@@ -15,7 +15,12 @@ namespace Eventual.Concurrency
                 || events.All(x => safeEvents.Contains(x));
         }
 
-        public void RegisterNoConflict(Type eventDefinition, IEnumerable<Type> doesNotConflictsWith)
+        public ConflictResolver RegisterNoConflict(Type eventDefinition, params Type[] doesNotConflictsWith)
+        {
+            return RegisterNoConflict(eventDefinition, (IEnumerable<Type>) doesNotConflictsWith);
+        }
+
+        public ConflictResolver RegisterNoConflict(Type eventDefinition, IEnumerable<Type> doesNotConflictsWith)
         {
             List<Type> safeEvents;
             if (!eventsThatDontConflict.TryGetValue(eventDefinition, out safeEvents)) {
@@ -23,6 +28,7 @@ namespace Eventual.Concurrency
             }
 
             safeEvents.AddRange(doesNotConflictsWith);
+            return this;
         }
     }
 }

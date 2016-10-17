@@ -5,6 +5,7 @@ using FluentAssertions;
 using System.Threading.Tasks;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using Eventual.Concurrency;
 using Eventual.EventStore;
 using Eventual.EventStore.Implementation.InMemory;
 using Eventual.Implementation;
@@ -35,13 +36,12 @@ namespace Eventual.IntegrationTests.InMemory
             var stream = subject.AsObservable();
             var domainObject = new DomainObject(Guids.Guid1);
 
-            var data = "Hello";
-            var events = domainObject.Create(data);
+            var events = domainObject.Create();
 
             await repository.SaveAsync(domainObject, events);
             subject.OnCompleted();
 
-            (await stream).Should().BeOfType<DomainObjectCreatedEvent>().Which.Text.Should().Be(data);
+            (await stream).Should().BeOfType<DomainObjectCreatedEvent>();
         }
 
         [Fact]
@@ -50,8 +50,7 @@ namespace Eventual.IntegrationTests.InMemory
             var repository = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).Build<DomainObject>();
             var domainObject = new DomainObject(Guids.Guid1);
 
-            var data = "Hello";
-            var events = domainObject.Create(data);
+            var events = domainObject.Create();
 
             await repository.SaveAsync(domainObject, events);
 
@@ -69,7 +68,7 @@ namespace Eventual.IntegrationTests.InMemory
             var repository2 = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).SetEventStore(store).Build<DifferentDomainObject>();
 
             var domainObject = new DomainObject(Guids.Guid1);
-            var events = domainObject.Create(string.Empty);
+            var events = domainObject.Create();
 
             await repository1.SaveAsync(domainObject, events);
 
@@ -96,7 +95,7 @@ namespace Eventual.IntegrationTests.InMemory
             var repository = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly).Build<DomainObject>();
 
             var domainObject = new DomainObject(Guids.Guid1);
-            var events = domainObject.Create(string.Empty);
+            var events = domainObject.Create();
             await repository.SaveAsync(domainObject, events);
 
             var domainObject1 = await repository.LoadAsync(Guids.Guid1);
@@ -111,6 +110,28 @@ namespace Eventual.IntegrationTests.InMemory
                 .Invoking(x => x.SaveAsync(domainObject2, events2).Wait())
                 .ShouldThrow<EventStoreConcurrencyException>()
                 .Which.Difference.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ConcurrentSafeSavesShouldNotThrow()
+        {
+            var repository = new RepositoryBuilder(EventualIntegrationTestsAssembly.Assembly)
+                .SetConflictResolver(new ConflictResolver()
+                    .RegisterNoConflict(typeof(DomainObjectSafelyUpdatedEvent), typeof(DomainObjectSafelyUpdatedEvent)))
+                .Build<DomainObject>();
+
+            var domainObject = new DomainObject(Guids.Guid1);
+            var events = domainObject.Create();
+            await repository.SaveAsync(domainObject, events);
+
+            var domainObject1 = await repository.LoadAsync(Guids.Guid1);
+            var domainObject2 = await repository.LoadAsync(Guids.Guid1);
+
+            var events1 = domainObject1.ConcurrencySafeUpdate();
+            await repository.SaveAsync(domainObject1, events1);
+
+            var events2 = domainObject.ConcurrencySafeUpdate();
+            await repository.SaveAsync(domainObject2, events2);
         }
     }
 }
