@@ -1,13 +1,27 @@
 ## Main current items
 
- - Integration test for concurrency
  - Abstraction for the Event store so that I can reuse code for both the in memory store and a sql store.
+
+ - Save multiple events in a single commit.
+  - Why?
+   - When replaying the domain model always gets the whole commit.
+   - Anything else??
+
+## Items to think about
+
+ - Events the raise events
+  - Are they always transitent
+
+ - A behaviour raising two events
+  - One persisted and one transient (transaction add and Balance updated)
+
+ - EventHandler 
+
 
 ## TODO Items
 
  - Working Examples
  - Concurrency
-  - Integration Test
  - Conventions
  - Snapshotting
  - Repository Builder
@@ -18,3 +32,4 @@
 
  - Unit Tests Examples
  - Integration Tests
+

@@ -22,12 +22,12 @@ namespace Eventual.EventStore.Implementation.InMemory
             throw new StreamNotFoundException(streamId);
         }
 
-        public Task SaveAsync(IConflictResolver conflictResolver, Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents)
+        public Task SaveAsync(Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, IConflictResolver conflictResolver)
         {
-            return UpdateStream(conflictResolver, streamId, loadedSequence, domainEvents, 5);
+            return UpdateStream(streamId, loadedSequence, domainEvents, 5, conflictResolver);
         }
 
-        private Task UpdateStream(IConflictResolver conflictResolver, Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, int retries)
+        private Task UpdateStream(Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, int retries, IConflictResolver conflictResolver)
         {
             if (loadedSequence == 0) {
                 eventStreams.Add(streamId, new List<object>());
@@ -61,7 +61,7 @@ namespace Eventual.EventStore.Implementation.InMemory
                     throw new EventStoreConcurrencyException(streamId, loadedSequence, events.Count, newEvents);
                 }
 
-                return UpdateStream(conflictResolver, streamId, events.Count, domainEvents, (retries - 1));
+                return UpdateStream(streamId, events.Count, domainEvents, (retries - 1), conflictResolver);
             }
 
             eventStreams[streamId].AddRange(domainEvents);

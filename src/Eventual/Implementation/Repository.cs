@@ -54,7 +54,7 @@ namespace Eventual.Implementation
                 .Where(x => eventClassifier.IsPersistedEvent(x.GetType()))
                 .ToArray();
 
-            await eventStore.SaveAsync(conflictResolver, aggregate.Id, aggregate.LoadedSequence, eventsToPersist);
+            await eventStore.SaveAsync(aggregate.Id, aggregate.LoadedSequence, eventsToPersist, conflictResolver);
 
         }
     }

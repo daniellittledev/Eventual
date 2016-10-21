@@ -9,7 +9,9 @@ namespace Eventual.EventStore
     public interface IEventStore
     {
         Task<AggregateStream> GetStreamAsync(Guid streamId);
-        Task SaveAsync(IConflictResolver conflictResolver, Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents);
+
+
+        Task SaveAsync(Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, IConflictResolver conflictResolver);
     }
 
     public class AggregateStream
