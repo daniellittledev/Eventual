@@ -7,7 +7,7 @@ using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using Eventual.Concurrency;
 using Eventual.EventStore;
-using Eventual.EventStore.Implementation.InMemory;
+using Eventual.EventStore.InMemory;
 using Eventual.Implementation;
 
 namespace Eventual.IntegrationTests.InMemory

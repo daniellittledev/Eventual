@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Eventual.Concurrency;
-using Eventual.MessageContracts;
 
 namespace Eventual.EventStore
 {
@@ -10,23 +8,9 @@ namespace Eventual.EventStore
     {
         Task<AggregateStream> GetStreamAsync(Guid streamId);
 
+        Task<IEnumerable<ConcurrencyEventInfo>> GetEventsAfterSequenceAsync(Guid streamId, int loadedSequence);
 
-        Task SaveAsync(Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents, IConflictResolver conflictResolver);
-    }
-
-    public class AggregateStream
-    {
-        public Guid StreamId { get; }
-        public int LatestSequence { get; }
-        public IEnumerable<object> Events { get; }
-        public object Snapshot { get; }
-
-        public AggregateStream(Guid streamId, int latestSequence, IEnumerable<object> events, object snapshot)
-        {
-            this.StreamId = streamId;
-            this.LatestSequence = latestSequence;
-            this.Events = events;
-            this.Snapshot = snapshot;
-        }
+        Task<StreamAppendAttempt> TryAppendToStreamAsync(Guid streamId, int loadedSequence, IReadOnlyCollection<object> domainEvents);
+        Task LockStreamAsync(Guid streamId);
     }
 }

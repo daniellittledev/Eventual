@@ -11,7 +11,7 @@ namespace Eventual.EventStore
         public int CurrentSteamSequence { get; }
         public int LoadedStreamSequence { get; }
         public int Difference { get; }
-        public IReadOnlyCollection<string> ExtraEventTypes { get; }
+        public IEnumerable<string> ExtraEventTypes { get; }
 
         public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence)
         {
@@ -21,10 +21,10 @@ namespace Eventual.EventStore
             Difference = CurrentSteamSequence - LoadedStreamSequence;
         }
 
-        public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence, IReadOnlyCollection<object> extraEvents)
+        public EventStoreConcurrencyException(Guid streamId, int loadedStreamSequence, int currentSteamSequence, IEnumerable<Type> extraEvents)
             : this (streamId, loadedStreamSequence, currentSteamSequence)
         {
-            ExtraEventTypes = extraEvents.Select(x => x.GetType().FullName).ToArray();
+            ExtraEventTypes = extraEvents.Select(x => x.FullName);
         }
 
         public override string Message {

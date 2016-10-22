@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Eventual.EventStore.Implementation.InMemory;
+using Eventual.EventStore.InMemory;
 using Eventual.Implementation;
 
 namespace Eventual.Autofac
@@ -12,7 +12,6 @@ namespace Eventual.Autofac
             builder.RegisterGeneric(typeof(AggregateHydrator<>)).AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<EventApplicator>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<InMemoryEventStore>().AsImplementedInterfaces().InstancePerLifetimeScope();
-
         }
     }
 }

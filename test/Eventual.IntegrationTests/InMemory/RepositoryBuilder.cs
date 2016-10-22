@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Eventual.Concurrency;
 using Eventual.Domain;
 using Eventual.EventStore;
-using Eventual.EventStore.Implementation.InMemory;
+using Eventual.EventStore.InMemory;
 using Eventual.EventTypes;
 using Eventual.Implementation;
 using Eventual.TypeDiscovery;
@@ -83,10 +83,12 @@ namespace Eventual.IntegrationTests.InMemory
         public IRepository<T> Build<T>()
             where T : class, IAggregateRoot
         {
+            
             var eventClassifier = new EventClassifier(domainEvents, transientEvents, eventAliases);
             var eventApplicator = new EventApplicator(applyExtensionMethods.ApplyMethods);
+            var eventManager = new EventManager(eventStore, conflictResolver, eventClassifier);
             var aggregateHydrator = new AggregateHydrator<T>(eventApplicator);
-            var repository = new Repository<T>(eventStore, conflictResolver, aggregateHydrator, eventBus, eventClassifier);
+            var repository = new Repository<T>(eventManager, aggregateHydrator, eventBus, eventClassifier);
             return repository;
         }
     }

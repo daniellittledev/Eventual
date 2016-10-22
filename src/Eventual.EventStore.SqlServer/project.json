@@ -1,0 +1,33 @@
+﻿{
+  "version": "0.0.1-alpha-1",
+  "authors": [ "Daniel Little" ],
+  "description": "Eventual EventStore using SqlServer",
+  "packOptions": {
+    "owners": [ "lavinski" ],
+    "copyright": "Copyright © Daniel Little 2015",
+    "tags": [ "Eventual", "Event", "Sourcing", "Aggregate", "EventStore" ],
+    "releaseNotes": "",
+    "licenseUrl": "https://github.com/Lavinski/Eventual/blob/master/License.md",
+    "projectUrl": "https://github.com/Lavinski/Eventual/",
+    "iconUrl": "https://raw.github.com/Lavinski/Eventual/master/Logo.png"
+  },
+
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "Eventual": { "target": "project" },
+    "Eventual.MessageContracts": { "target": "project" },
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Linq": "4.1.0",
+    "System.Data.SqlClient": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

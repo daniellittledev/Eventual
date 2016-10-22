@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Eventual.Concurrency;
 using Eventual.Domain;
 using Eventual.EventStore;
 using Eventual.EventTypes;
@@ -11,16 +10,14 @@ namespace Eventual.Implementation
     public class Repository<T> : IRepository<T>
         where T : class, IAggregateRoot
     {
-        private readonly IEventStore eventStore;
-        private readonly IConflictResolver conflictResolver;
+        private readonly IEventManager eventManager;
         private readonly IAggregateHydrator<T> hydrator;
         private readonly IEventBus eventBus;
         private readonly IEventClassifier eventClassifier;
 
-        public Repository(IEventStore eventStore, IConflictResolver conflictResolver, IAggregateHydrator<T> hydrator, IEventBus eventBus, IEventClassifier eventClassifier)
+        public Repository(IEventManager eventManager, IAggregateHydrator<T> hydrator, IEventBus eventBus, IEventClassifier eventClassifier)
         {
-            this.eventStore = eventStore;
-            this.conflictResolver = conflictResolver;
+            this.eventManager = eventManager;
             this.hydrator = hydrator;
             this.eventBus = eventBus;
             this.eventClassifier = eventClassifier;
@@ -31,7 +28,7 @@ namespace Eventual.Implementation
             aggregateId.RequireNotDefault(nameof(aggregateId));
 
             try {
-                var aggregateStream = await eventStore.GetStreamAsync(aggregateId);
+                var aggregateStream = await eventManager.GetStreamAsync(aggregateId);
                 return hydrator.Hydrate(aggregateStream);
 
             } catch (StreamNotFoundException ex) {
@@ -44,6 +41,10 @@ namespace Eventual.Implementation
             aggregate.RequireNotNull(nameof(aggregate));
             domainEvents.RequireNotNullOrEmpty(nameof(domainEvents));
 
+            if (domainEvents.Length == 0) {
+                throw new SavedAnAggregateThatHadNoChangesException(aggregate.Id);
+            }
+
             var tasks = domainEvents
                 .Select(e => eventBus.PublishAsync(e))
                 .ToArray();
@@ -54,7 +55,7 @@ namespace Eventual.Implementation
                 .Where(x => eventClassifier.IsPersistedEvent(x.GetType()))
                 .ToArray();
 
-            await eventStore.SaveAsync(aggregate.Id, aggregate.LoadedSequence, eventsToPersist, conflictResolver);
+            await eventManager.SaveAsync(aggregate.Id, aggregate.LoadedSequence, eventsToPersist);
 
         }
     }

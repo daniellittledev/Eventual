@@ -1,7 +1,5 @@
 ## Main current items
 
- - Abstraction for the Event store so that I can reuse code for both the in memory store and a sql store.
-
  - Save multiple events in a single commit.
   - Why?
    - When replaying the domain model always gets the whole commit.
@@ -17,11 +15,9 @@
 
  - EventHandler 
 
-
 ## TODO Items
 
  - Working Examples
- - Concurrency
  - Conventions
  - Snapshotting
  - Repository Builder
@@ -33,3 +29,7 @@
  - Unit Tests Examples
  - Integration Tests
 
+## Done (At least for the moment)
+
+ - Concurrency
+ - Abstraction for the Event store so that I can reuse code for both the in memory store and a sql store.

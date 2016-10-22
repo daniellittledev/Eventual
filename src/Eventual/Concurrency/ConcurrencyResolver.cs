@@ -11,8 +11,8 @@ namespace Eventual.Concurrency
         public bool ConflictsWith(Type eventToCheck, IEnumerable<Type> events)
         {
             List<Type> safeEvents;
-            return !eventsThatDontConflict.TryGetValue(eventToCheck, out safeEvents)
-                || events.All(x => safeEvents.Contains(x));
+            return !eventsThatDontConflict.TryGetValue(eventToCheck, out safeEvents) 
+                || events.Any(newEvent => !safeEvents.Contains(newEvent));
         }
 
         public ConflictResolver RegisterNoConflict(Type eventDefinition, params Type[] doesNotConflictsWith)
