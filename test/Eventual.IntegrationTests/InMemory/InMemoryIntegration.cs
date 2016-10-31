@@ -1,18 +1,18 @@
-﻿using Eventual.IntegrationTests.TestDomain;
-using System;
-using Xunit;
-using FluentAssertions;
-using System.Threading.Tasks;
-using System.Reactive.Subjects;
+﻿using System;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Eventual.Concurrency;
 using Eventual.EventStore;
 using Eventual.EventStore.InMemory;
 using Eventual.Implementation;
+using Eventual.IntegrationTests.TestDomain;
+using FluentAssertions;
+using Xunit;
 
 namespace Eventual.IntegrationTests.InMemory
 {
-    public class FullIntegration
+    public class InMemoryIntegration
     {
         [Fact]
         public void LoadAggregateThatDoesNotExistShouldThrow()

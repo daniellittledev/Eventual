@@ -1,9 +1,10 @@
 ## Main current items
 
- - Save multiple events in a single commit.
-  - Why?
-   - When replaying the domain model always gets the whole commit.
-   - Anything else??
+ - Save Events to SQL Server
+ - Dispatch for Distributed systems
+ - Buckets (For splitting up the streams)
+ - Better Event Store API
+
 
 ## Items to think about
 
@@ -13,7 +14,9 @@
  - A behaviour raising two events
   - One persisted and one transient (transaction add and Balance updated)
 
- - EventHandler 
+ - EventHandler
+
+ - Multiple Events per commit
 
 ## TODO Items
 

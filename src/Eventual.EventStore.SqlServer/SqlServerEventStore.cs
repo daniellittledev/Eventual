@@ -8,10 +8,12 @@ namespace Eventual.EventStore.SqlServer
     public class SqlServerEventStore : IEventStore
     {
         private readonly DbConnection connection;
+        private readonly DbTransaction transaction;
 
-        public SqlServerEventStore(DbConnection connection)
+        public SqlServerEventStore(DbConnection connection, DbTransaction transaction)
         {
             this.connection = connection;
+            this.transaction = transaction;
         }
 
         public Task<AggregateStream> GetStreamAsync(Guid streamId)

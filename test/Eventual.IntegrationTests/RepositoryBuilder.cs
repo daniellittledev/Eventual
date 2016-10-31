@@ -10,7 +10,7 @@ using Eventual.EventTypes;
 using Eventual.Implementation;
 using Eventual.TypeDiscovery;
 
-namespace Eventual.IntegrationTests.InMemory
+namespace Eventual.IntegrationTests
 {
     public class RepositoryBuilder
     {
